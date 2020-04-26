@@ -1,5 +1,6 @@
 import os
 import time
+import json
 from selenium import webdriver
 
 # Declaring application to start web browser
@@ -12,18 +13,29 @@ password_ = os.getenv("UMUZI_PASSWORD")
 
 
 class Bot:
-    def __init__(self, name_of_recruit, status, feedback=None):
+    def __init__(self, name_of_recruit, recruit_repo, status, feedback=None):
         self.name = name_of_recruit
+        self.repo = recruit_repo
         self.status = status
-        self.feedback = feedback
-
-        driver.get(f'http://{rocket_chat_server}/direct/{self.name}')
-        time.sleep(5)
+        self.feedback = open(feedback)
+        self.messages = json.load(open('../assets/messages.json'))
 
     def run(self):
+        driver.get(f'http://{rocket_chat_server}/direct/{self.name}')
+        time.sleep(5)
         self.login(email, password_)
         time.sleep(5)
         self.send_message(self.feedback)
+
+    def create_message(self):
+        subject = self.messages['greeting'].format(self.name)
+        body = self.messages[self.status].format(self.repo)
+        conclusion = self.messages['conclusion']
+
+        if not self.feedback:
+            return subject + '\n\n' + body + '\n\n' + conclusion
+        else:
+            return subject + '\n\n' + body + '\n\n' + self.feedback + '\n\n' + conclusion
 
     def login(self, username_, pass_):
         # id="emailOrUsername"
@@ -53,4 +65,4 @@ class Bot:
             send_button.click()
 
 
-Bot('wandile', 'competent', 'test4').run()
+print(Bot('wandile', 'repo', 'red_flag').create_message())
