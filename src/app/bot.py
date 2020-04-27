@@ -3,9 +3,6 @@ import time
 import json
 from selenium import webdriver
 
-# Declaring application to start web browser
-driver = webdriver.Chrome()
-
 # Adding all environment variables
 rocket_chat_server = os.getenv("CHAT_SERVER")
 email = os.getenv("UMUZI_EMAIL")
@@ -14,6 +11,7 @@ password_ = os.getenv("UMUZI_PASSWORD")
 
 class Bot:
     def __init__(self, name_of_recruit, recruit_repo, status, feedback=None):
+        self.driver = webdriver.Chrome()
         self.name = name_of_recruit
         self.repo = recruit_repo
         self.status = status
@@ -21,7 +19,8 @@ class Bot:
         self.messages = json.load(open('../assets/messages.json'))
 
     def run(self):
-        driver.get(f'http://{rocket_chat_server}/direct/{self.name}')
+        # Declaring application to start web browser
+        self.driver.get(f'http://{rocket_chat_server}/direct/{self.name}')
         time.sleep(5)
         self.login(email, password_)
         time.sleep(20)
@@ -41,17 +40,17 @@ class Bot:
 
     def login(self, username_, pass_):
         # id="emailOrUsername"
-        username = driver.find_element_by_id('emailOrUsername')
+        username = self.driver.find_element_by_id('emailOrUsername')
         username.send_keys(username_)
 
         # id='pass'
-        password = driver.find_element_by_id('pass')
+        password = self.driver.find_element_by_id('pass')
         password.send_keys(pass_)
 
         time.sleep(2)
 
         # class='login'
-        login_button = driver.find_element_by_class_name('login')
+        login_button = self.driver.find_element_by_class_name('login')
         login_button.click()
 
     def send_message(self, message):
@@ -60,11 +59,9 @@ class Bot:
         confirm = input('Are you sure you want send the message? y[Y] or n[N]')
 
         if confirm.lower() == 'y':
-            msg_box = driver.find_element_by_class_name('js-input-message')
+            msg_box = self.driver.find_element_by_class_name('js-input-message')
             msg_box.send_keys(message)
 
-            send_button = driver.find_element_by_class_name('js-send')
+            send_button = self.driver.find_element_by_class_name('js-send')
             send_button.click()
 
-
-print(Bot('wandile', 'repo', 'competent', '../assets/masai.mahapa.md').run())

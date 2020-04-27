@@ -1,3 +1,4 @@
 .env
 .idea
 src/assets/*.md
+__pycache__
