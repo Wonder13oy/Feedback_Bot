@@ -15,15 +15,17 @@ class Bot:
         self.name = name_of_recruit
         self.repo = recruit_repo
         self.status = status
-        self.feedback = open(feedback).read()
         self.messages = json.load(open('../assets/messages.json'))
+
+        if feedback is not None:
+            self.feedback = open(feedback).read()
 
     def run(self):
         # Declaring application to start web browser
         self.driver.get(f'http://{rocket_chat_server}/direct/{self.name}')
         time.sleep(5)
         self.login(email, password_)
-        time.sleep(20)
+        time.sleep(10)
         msg = self.create_message()
         self.send_message(msg)
 
@@ -33,7 +35,7 @@ class Bot:
         reassurance = self.messages['reassurance']
         conclusion = self.messages['conclusion']
 
-        if not self.feedback or self.status == 'competent':
+        if self.status == 'competent' or self.status == 'excellent':
             return subject + '\n\n' + body + '\n\n' + conclusion
         else:
             return subject + '\n\n' + body + '\n\n' + self.feedback + '\n\n' + reassurance + '\n\n' + conclusion
@@ -55,13 +57,13 @@ class Bot:
 
     def send_message(self, message):
 
-        print(f'The message you are about send:\n\n{message}')
-        confirm = input('Are you sure you want send the message? y[Y] or n[N]')
+        # print(f'The message you are about send:\n\n{message}')
+        # confirm = input('Are you sure you want send the message? y[Y] or n[N]')
 
-        if confirm.lower() == 'y':
-            msg_box = self.driver.find_element_by_class_name('js-input-message')
-            msg_box.send_keys(message)
+        # if confirm.lower() == 'y':
+        msg_box = self.driver.find_element_by_class_name('js-input-message')
+        msg_box.send_keys(message)
 
-            send_button = self.driver.find_element_by_class_name('js-send')
-            send_button.click()
+        send_button = self.driver.find_element_by_class_name('js-send')
+        send_button.click()
 

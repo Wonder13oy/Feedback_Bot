@@ -2,3 +2,10 @@
 .idea
 src/assets/*.md
 __pycache__
+recruits.csv
+random*
+users.json
+scraper.py
+clean.html
+*.svg
+*.png
