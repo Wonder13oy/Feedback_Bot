@@ -17,7 +17,7 @@ class Bot:
         self.name = name_of_recruit
         self.repo = recruit_repo
         self.status = status
-        self.feedback = open(feedback)
+        self.feedback = str(open(feedback).read())
         self.messages = json.load(open('../assets/messages.json'))
 
     def run(self):
@@ -65,4 +65,4 @@ class Bot:
             send_button.click()
 
 
-print(Bot('wandile', 'repo', 'red_flag').create_message())
+print(Bot('wandile', 'repo', 'red_flag', '../assets/masai.mahapa.md').create_message())
