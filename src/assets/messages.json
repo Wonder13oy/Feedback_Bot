@@ -1,8 +1,9 @@
 {
-  "greeting": "Hey @{}",
+  "greeting": "Hey @{}  ",
   "excellent": "I was reviewing your {}. I found your work to be **Excellent**. I really love your logic and 'outside the box' thinking. Please continue to do this and Keep it up. Could you also help your fellow peers and show them how you approached this project.",
   "competent": "I was reviewing your {}. I have marked you  as competent. Well done and keep it up.",
   "not_competent": "I was reviewing your {}. I found some issues I would like for you to fix:",
   "red_flag": "I was reviewing your {}. I have marked you as a **RED FLAG**. Here are some of the major issues:",
+  "reassurance": "Please fix the issues mentioned above. If you have any questions, feel free to contact me.",
   "conclusion": "Thank you"
 }

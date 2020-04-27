@@ -17,25 +17,27 @@ class Bot:
         self.name = name_of_recruit
         self.repo = recruit_repo
         self.status = status
-        self.feedback = str(open(feedback).read())
+        self.feedback = open(feedback).read()
         self.messages = json.load(open('../assets/messages.json'))
 
     def run(self):
         driver.get(f'http://{rocket_chat_server}/direct/{self.name}')
         time.sleep(5)
         self.login(email, password_)
-        time.sleep(5)
-        self.send_message(self.feedback)
+        time.sleep(20)
+        msg = self.create_message()
+        self.send_message(msg)
 
     def create_message(self):
         subject = self.messages['greeting'].format(self.name)
         body = self.messages[self.status].format(self.repo)
+        reassurance = self.messages['reassurance']
         conclusion = self.messages['conclusion']
 
-        if not self.feedback:
+        if not self.feedback or self.status == 'competent':
             return subject + '\n\n' + body + '\n\n' + conclusion
         else:
-            return subject + '\n\n' + body + '\n\n' + self.feedback + '\n\n' + conclusion
+            return subject + '\n\n' + body + '\n\n' + self.feedback + '\n\n' + reassurance + '\n\n' + conclusion
 
     def login(self, username_, pass_):
         # id="emailOrUsername"
@@ -53,16 +55,16 @@ class Bot:
         login_button.click()
 
     def send_message(self, message):
-        msg_box = driver.find_element_by_class_name('js-input-message')
-        msg_box.send_keys(message)
 
         print(f'The message you are about send:\n\n{message}')
         confirm = input('Are you sure you want send the message? y[Y] or n[N]')
 
-        send_button = driver.find_element_by_class_name('js-send')
-
         if confirm.lower() == 'y':
+            msg_box = driver.find_element_by_class_name('js-input-message')
+            msg_box.send_keys(message)
+
+            send_button = driver.find_element_by_class_name('js-send')
             send_button.click()
 
 
-print(Bot('wandile', 'repo', 'red_flag', '../assets/masai.mahapa.md').create_message())
+print(Bot('wandile', 'repo', 'competent', '../assets/masai.mahapa.md').run())
